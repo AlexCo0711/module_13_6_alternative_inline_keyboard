@@ -1,3 +1,5 @@
+# Домашнее задание по теме "Инлайн клавиатуры".
+
 # импорт необходимых библиотек и методов
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -19,8 +21,8 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 
 # создание одноразовой клавиатуры и кнопок ReplyKeyboard
 kb_man = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-butt_man = KeyboardButton(text='м')
-butt_woman = KeyboardButton(text='ж')
+butt_man = KeyboardButton(text='мужчина')
+butt_woman = KeyboardButton(text='женщина')
 kb_man.add(butt_man, butt_woman)
 
 # создание инлайн-клавиатуры с кнопками
@@ -115,7 +117,7 @@ async def set_weight(message: types.Message, state: FSMContext):
     # ожидание сохранение сообщения веса от пользователя в базе данных состояния
     await state.update_data(weight_=message.text)
     # ожидание вывода текста
-    await message.reply('Выбеоите свой пол (м / ж):', reply_markup=kb_man)
+    await message.reply('Выберите кнопку своего пола (мужчина / женщина):', reply_markup=kb_man)
     # ожидание ввода пола
     await UserState.man.set()
 
@@ -129,12 +131,12 @@ async def set_calories(message: types.Message, state: FSMContext):
     # сохранение полученных данных в переменной data
     data = await state.get_data()
     # условие анализа пола пользователя
-    if str(data['man_']) == 'м':
+    if str(data['man_']) == 'мужчина':
         # Расчет по формуле Миффлина-Сан Жеора для мужчин
         calories = int(data['weight_']) * 10 + int(data['growth_']) * 6.25 - int(data['age_']) * 5 + 5
         # ожидание вывода текста результатов расчета
         await message.reply(f'Ваша норма калорий {calories} день')
-    elif str(data['man_']) == 'ж':
+    elif str(data['man_']) == 'женщина':
         # Расчет по формуле Миффлина-Сан Жеора для женщин
         calories = int(data['weight_']) * 10 + int(data['growth_']) * 6.25 - int(data['age_']) * 5 - 161
         # ожидание вывода текста результатов расчета
